@@ -19,11 +19,15 @@ class SearchPage extends BasePage {
 
   async searchProduct(product) {
 
+    await this.searchInput.clear();
+
     await this.searchInput.fill(product);
+
+    await this.page.waitForTimeout(1000);
 
     await this.page.keyboard.press('Enter');
 
-    await this.page.waitForTimeout(3000);
+    await this.page.waitForTimeout(4000);
 
   }
 

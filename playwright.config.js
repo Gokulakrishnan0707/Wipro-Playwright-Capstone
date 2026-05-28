@@ -1,26 +1,29 @@
-const { defineConfig } = require('@playwright/test');
+const { defineConfig, devices } = require('@playwright/test');
 
 module.exports = defineConfig({
   testDir: './tests',
 
   fullyParallel: true,
 
-  retries: 1,
+  reporter: [['html'], ['allure-playwright', { resultsDir: 'allure-results' }]],
+
 
   use: {
-    baseURL: 'https://www.thesouledstore.com',
-
-    headless: false,
-
-    screenshot: 'only-on-failure',
-
     trace: 'on-first-retry',
-
-    video: 'retain-on-failure'
   },
 
-  reporter: [
-    ['html', { outputFolder: 'reports' }]
-  ]
+  projects: [
+    {
+      name: 'chromium',
+      use: { ...devices['Desktop Chrome'] },
+    },
+    {
+      name: 'firefox',
+      use: { ...devices['Desktop Firefox'] },
+    },
+    {
+      name: 'webkit',
+      use: { ...devices['Desktop Safari'] },
+    },
+  ],
 });
-
