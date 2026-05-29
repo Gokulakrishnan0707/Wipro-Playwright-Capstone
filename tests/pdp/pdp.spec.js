@@ -1,6 +1,6 @@
 const { test, expect } = require('@playwright/test');
 
-const PDPPage = require('../../pages/PDPPage');
+const PDPPage = require('../../pages/pdppage');
 
 test.describe('PDP Module', () => {
 

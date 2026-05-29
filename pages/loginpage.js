@@ -1,4 +1,4 @@
-const BasePage = require('./BasePage');
+const BasePage = require('./basepage');
 
 class LoginPage extends BasePage {
 

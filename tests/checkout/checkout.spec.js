@@ -1,6 +1,6 @@
 const { test, expect } = require('@playwright/test');
 
-const CheckoutPage = require('../../pages/CheckoutPage');
+const CheckoutPage = require('../../pages/checkoutpage');
 
 test.describe('Checkout Module', () => {
 

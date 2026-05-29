@@ -1,6 +1,6 @@
 const { test, expect } = require('@playwright/test');
 
-const WishlistPage = require('../../pages/WishlistPage');
+const WishlistPage = require('../../pages/wishlistpage');
 
 test.describe('Wishlist Module', () => {
 

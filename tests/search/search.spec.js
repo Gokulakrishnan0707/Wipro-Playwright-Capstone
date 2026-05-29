@@ -1,6 +1,6 @@
 const { test, expect } = require('@playwright/test');
 
-const SearchPage = require('../../pages/SearchPage');
+const SearchPage = require('../../pages/searchpage');
 
 test.describe('Search Module', () => {
 
