@@ -12,6 +12,8 @@ test.describe('Wishlist Module', () => {
 
     await wishlistPage.openWishlistPage();
 
+    await page.waitForLoadState('domcontentloaded');
+
   });
 
   test.afterEach(async ({ page }, testInfo) => {
@@ -27,19 +29,13 @@ test.describe('Wishlist Module', () => {
 
   });
 
-  test('Verify wishlist page opens successfully', async ({ page, browserName }) => {
-
-    test.skip(browserName === 'firefox',
-      'Firefox wishlist rendering issue');
+  test('Verify wishlist page opens successfully', async ({ page }) => {
 
     await expect(page.locator('body')).toBeVisible();
 
   });
 
-  test('Verify wishlist URL loaded', async ({ page, browserName }) => {
-
-    test.skip(browserName === 'firefox',
-      'Firefox wishlist URL issue');
+  test('Verify wishlist URL loaded', async ({ page }) => {
 
     const url = page.url();
 
@@ -47,10 +43,7 @@ test.describe('Wishlist Module', () => {
 
   });
 
-  test('Verify page title available', async ({ page, browserName }) => {
-
-    test.skip(browserName === 'firefox',
-      'Firefox title issue');
+  test('Verify page title available', async ({ page }) => {
 
     const title = await page.title();
 
@@ -72,10 +65,7 @@ test.describe('Wishlist Module', () => {
 
   });
 
-  test('Verify buttons available', async ({ page, browserName }) => {
-
-    test.skip(browserName === 'firefox',
-      'Wishlist buttons unstable in Firefox');
+  test('Verify buttons available', async ({ page }) => {
 
     const count = await page.locator('button').count();
 
@@ -83,10 +73,7 @@ test.describe('Wishlist Module', () => {
 
   });
 
-  test('Verify page refresh works', async ({ page, browserName }) => {
-
-    test.skip(browserName === 'firefox',
-      'Firefox refresh issue');
+  test('Verify page refresh works', async ({ page }) => {
 
     await page.reload();
 
@@ -119,10 +106,7 @@ test.describe('Wishlist Module', () => {
 
   });
 
-  test('Verify wishlist page reload works', async ({ page, browserName }) => {
-
-    test.skip(browserName === 'firefox',
-      'Firefox reload issue');
+  test('Verify wishlist page reload works', async ({ page }) => {
 
     await page.reload();
 
@@ -168,6 +152,24 @@ test.describe('Wishlist Module', () => {
       path: 'screenshots/wishlist-scroll.png',
       fullPage: true
     });
+
+  });
+
+  test('Verify wishlist page responds after reload', async ({ page }) => {
+
+    await page.reload();
+
+    await page.waitForTimeout(3000);
+
+    await expect(page.locator('body')).toBeVisible();
+
+  });
+
+  test('Verify wishlist page scroll to bottom', async ({ page }) => {
+
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+
+    await expect(page.locator('body')).toBeVisible();
 
   });
 

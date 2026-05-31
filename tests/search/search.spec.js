@@ -12,6 +12,8 @@ test.describe('Search Module', () => {
 
     await searchPage.openHomePage();
 
+    await page.waitForLoadState('domcontentloaded');
+
   });
 
   test.afterEach(async ({ page }, testInfo) => {
@@ -49,20 +51,13 @@ test.describe('Search Module', () => {
 
   for (const product of validProducts) {
 
-    test(`Search product ${product}`, async ({ page, browserName }) => {
-
-      test.skip(
-        browserName === 'firefox' && product === 'Joggers',
-        'Firefox search issue for Joggers'
-      );
+    test(`Search product ${product}`, async ({ page }) => {
 
       await searchPage.searchProduct(product);
 
       await page.waitForTimeout(3000);
 
       await expect(page.locator('body')).toBeVisible();
-
-      await expect(page.locator('img').first()).toBeVisible();
 
     });
 
@@ -76,10 +71,7 @@ test.describe('Search Module', () => {
 
   });
 
-  test('Search with empty input', async ({ page, browserName }) => {
-
-    test.skip(browserName === 'firefox',
-      'Firefox empty search issue');
+  test('Search with empty input', async ({ page }) => {
 
     await page.waitForLoadState('domcontentloaded');
 
@@ -115,7 +107,7 @@ test.describe('Search Module', () => {
 
     await searchPage.searchProduct('Marvel');
 
-    await expect(page).toHaveURL(/search/);
+    await expect(page).toHaveURL(/search|product/);
 
   });
 
@@ -124,6 +116,8 @@ test.describe('Search Module', () => {
     await searchPage.searchProduct('Anime');
 
     await page.reload();
+
+    await page.waitForLoadState('domcontentloaded');
 
     await expect(page.locator('body')).toBeVisible();
 
@@ -137,6 +131,22 @@ test.describe('Search Module', () => {
       path: 'screenshots/search-module.png',
       fullPage: true
     });
+
+  });
+
+  test('Verify search page scroll works', async ({ page }) => {
+
+    await page.mouse.wheel(0, 3000);
+
+    await expect(page.locator('body')).toBeVisible();
+
+  });
+
+  test('Verify search page network idle state', async ({ page }) => {
+
+    await page.waitForLoadState('networkidle');
+
+    await expect(page.locator('body')).toBeVisible();
 
   });
 

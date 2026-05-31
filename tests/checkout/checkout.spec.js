@@ -12,6 +12,8 @@ test.describe('Checkout Module', () => {
 
     await checkoutPage.openCheckoutPage();
 
+    await page.waitForLoadState('domcontentloaded');
+
   });
 
   test.afterEach(async ({ page }, testInfo) => {
@@ -27,23 +29,15 @@ test.describe('Checkout Module', () => {
 
   });
 
-  test('Verify checkout page opens successfully', async ({ page, browserName }) => {
-
-    test.skip(browserName === 'firefox',
-      'Firefox checkout rendering issue');
+  test('Verify checkout page opens successfully', async ({ page }) => {
 
     await expect(page.locator('body')).toBeVisible();
 
   });
 
-  test('Verify checkout URL loaded', async ({ page, browserName }) => {
+  test('Verify checkout URL loaded', async ({ page }) => {
 
-    test.skip(browserName === 'firefox',
-      'Firefox checkout URL issue');
-
-    const url = page.url();
-
-    expect(url.length).toBeGreaterThan(0);
+    await expect(page).toHaveURL(/checkout|cart|address|login/);
 
   });
 
@@ -55,19 +49,13 @@ test.describe('Checkout Module', () => {
 
   });
 
-  test('Verify body visible', async ({ page, browserName }) => {
-
-    test.skip(browserName === 'firefox',
-      'Firefox body rendering issue');
+  test('Verify body visible', async ({ page }) => {
 
     await expect(page.locator('body')).toBeVisible();
 
   });
 
-  test('Verify input fields available', async ({ page, browserName }) => {
-
-    test.skip(browserName === 'firefox',
-      'Firefox input rendering issue');
+  test('Verify input fields available', async ({ page }) => {
 
     const count = await page.locator('input').count();
 
@@ -83,10 +71,7 @@ test.describe('Checkout Module', () => {
 
   });
 
-  test('Verify page refresh works', async ({ page, browserName }) => {
-
-    test.skip(browserName === 'firefox',
-      'Firefox refresh issue');
+  test('Verify page refresh works', async ({ page }) => {
 
     await page.reload();
 
@@ -127,10 +112,7 @@ test.describe('Checkout Module', () => {
 
   });
 
-  test('Verify checkout page responds after reload', async ({ page, browserName }) => {
-
-    test.skip(browserName === 'firefox',
-      'Firefox reload issue');
+  test('Verify checkout page responds after reload', async ({ page }) => {
 
     await page.reload();
 
@@ -176,6 +158,28 @@ test.describe('Checkout Module', () => {
       path: 'screenshots/checkout-scroll.png',
       fullPage: true
     });
+
+  });
+
+  test('Verify checkout page reload stability', async ({ page }) => {
+
+    await page.reload();
+
+    await page.waitForTimeout(3000);
+
+    await expect(page.locator('body')).toBeVisible();
+
+  });
+
+  test('Verify checkout page loads without console errors', async ({ page }) => {
+
+    const errors = [];
+
+    page.on('pageerror', error => errors.push(error));
+
+    await page.waitForTimeout(3000);
+
+    expect(errors.length).toBe(0);
 
   });
 

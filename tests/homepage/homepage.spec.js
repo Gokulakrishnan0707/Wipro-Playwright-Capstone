@@ -12,6 +12,8 @@ test.describe('Homepage Module', () => {
 
     await homePage.openHomePage();
 
+    await page.waitForLoadState('domcontentloaded');
+
   });
 
   test.afterEach(async ({ page }, testInfo) => {
@@ -27,30 +29,21 @@ test.describe('Homepage Module', () => {
 
   });
 
-test('Verify homepage URL loads successfully', async ({ page, browserName }) => {
+  test('Verify homepage URL loads successfully', async ({ page }) => {
 
-  test.skip(browserName === 'firefox',
-    'Firefox homepage redirect issue');
+    await expect(page).toHaveURL(/thesouledstore/);
 
-  await expect(page).toHaveURL(/thesouledstore/);
+  });
 
-});
+  test('Verify Men menu visible', async ({ page }) => {
 
-test('Verify Men menu visible', async ({ page, browserName }) => {
+    await page.waitForTimeout(3000);
 
-  test.skip(browserName === 'firefox',
-    'Firefox menu rendering issue');
+    await expect(page.locator('body')).toBeVisible();
 
-  await page.waitForTimeout(5000);
+  });
 
-  await expect(page.locator('body')).toBeVisible();
-
-});
-
-  test('Verify Women menu visible', async ({ page, browserName }) => {
-
-    test.skip(browserName === 'firefox',
-      'Firefox UI rendering issue');
+  test('Verify Women menu visible', async ({ page }) => {
 
     await expect(page.locator('body')).toBeVisible();
 
@@ -62,10 +55,7 @@ test('Verify Men menu visible', async ({ page, browserName }) => {
 
   });
 
-  test('Verify current URL contains domain', async ({ page, browserName }) => {
-
-    test.skip(browserName === 'firefox',
-      'Firefox domain validation issue');
+  test('Verify current URL contains domain', async ({ page }) => {
 
     await expect(page).toHaveURL(/thesouledstore/);
 
@@ -77,10 +67,7 @@ test('Verify Men menu visible', async ({ page, browserName }) => {
 
   });
 
-  test('Verify homepage banner visible', async ({ page, browserName }) => {
-
-    test.skip(browserName === 'firefox',
-      'Firefox banner rendering issue');
+  test('Verify homepage banner visible', async ({ page }) => {
 
     await expect(page.locator('body')).toBeVisible();
 
@@ -114,12 +101,11 @@ test('Verify Men menu visible', async ({ page, browserName }) => {
 
   });
 
-  test('Verify page refresh works correctly', async ({ page, browserName }) => {
-
-    test.skip(browserName === 'firefox',
-      'Firefox refresh issue');
+  test('Verify page refresh works correctly', async ({ page }) => {
 
     await page.reload();
+
+    await page.waitForLoadState('domcontentloaded');
 
     await expect(page.locator('body')).toBeVisible();
 
@@ -150,6 +136,22 @@ test('Verify Men menu visible', async ({ page, browserName }) => {
     await expect(page.locator('body')).toBeVisible();
 
     await expect(page.locator('img').first()).toBeVisible();
+
+  });
+
+  test('Verify homepage scroll works properly', async ({ page }) => {
+
+    await page.mouse.wheel(0, 4000);
+
+    await expect(page.locator('body')).toBeVisible();
+
+  });
+
+  test('Verify homepage network idle state', async ({ page }) => {
+
+    await page.waitForLoadState('networkidle');
+
+    await expect(page.locator('body')).toBeVisible();
 
   });
 
